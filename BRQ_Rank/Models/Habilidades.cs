@@ -1,6 +1,6 @@
 ﻿namespace BRQ_Rank.Models {
     public class Habilidade {
-        public Competencias? Competencias;
+        public Competencias? Competencias { get; set; }
         public Candidato? Candidato;
         public DateTime Dt_certificacao { get; set; }
 

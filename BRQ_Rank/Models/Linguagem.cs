@@ -1,7 +1,7 @@
 ﻿namespace BRQ_Rank.Models
 {
     public class Linguagem{
-        public Idiomas? Idiomas;
+        public Idiomas? Idiomas { get; set; }
         public Candidato? Candidato;
         public string? Tp_Nivel { get; set; }
 
