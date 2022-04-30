@@ -27,30 +27,46 @@ namespace BRQ_Rank.Db {
 
         private void PopularEntidades() {
             for (int i = 0; i < 60; i++) {
-                db.Competencias.Add(new Competencias($"Competencia {i}"));
+                db.Competencias.Add(new Competencias($"Competencia{i}") { Id = i});
             }
             for (int i = 0; i < 23; i++) {
-                db.Idiomas.Add(new Idiomas($"Idioma {i}"));
+                db.Idiomas.Add(new Idiomas($"Idioma{i}") { Id = i});
             }
             for (int i = 0; i < 60; i++) {
-                db.Tecnologias.Add(new Tecnologias($"Tecnologia {i}"));
+                db.Tecnologias.Add(new Tecnologias($"Tecnologia{i}") { Id = i});
             }
 
-            for (int i = 0; i < 20; i++) {
-                var day = random.Next(1, 31);
+            for (int i = 0; i < 200; i++) {
+                var day = random.Next(1, 29);
                 var month = random.Next(1, 13);
                 var year = random.Next(1930, 2005);
-                var candidato = new Candidato($"Candidato {i}", i%2, new DateTime(), $"candidato{i}@teste.com", "", 
-                                              new List<Habilidade>(), new List<Linguagem>(), new List<Skills>());
-                for (int j = 0; j < 10; j++) {
-                    candidato.Habilidades?.Add(new Habilidade(db.Competencias.OrderBy(x => random.Next()).First(), candidato, new DateTime()));
+                var candidato = new Candidato($"Candidato {i}", i%2, new DateTime(year, month, day), $"candidato{i}@teste.com", "", 
+                                              new List<Habilidade>(), new List<Linguagem>(), new List<Skills>()) { Id = i};
+
+                for (int j = 0; j < random.Next(11); j++) {
+                    var h = new Habilidade(db.Competencias.OrderBy(x => random.Next()).First(), candidato, new DateTime());
+                    if (candidato.Habilidades.Exists(habilidade => habilidade.Competencias.Id == h.Competencias.Id))
+                        continue;
+                    db.Habilidade.Add(h);
+
+                    candidato.Habilidades?.Add(h);
                 }
-                for (int j = 0; j < 10; j++) {
-                    int nivel = new Random().Next(0,4);
-                    candidato.Linguagens?.Add(new Linguagem(db.Idiomas.OrderBy(x => random.Next()).First(), candidato, nivel == 1 ? "Básico" : (nivel == 2 ? "Médio" : (nivel == 3 ? "Avançado" : "Nenhum"))));
+                for (int j = 0; j < random.Next(11); j++) {
+                    int nivel = new Random().Next(0, 4);
+                    var l = new Linguagem(db.Idiomas.OrderBy(x => random.Next()).First(), candidato, nivel == 1 ? "Básico" : (nivel == 2 ? "Médio" : (nivel == 3 ? "Avançado" : "Nenhum")));
+                    if (candidato.Linguagens.Exists(lingua => lingua.Idiomas.Id == l.Idiomas.Id))
+                        continue;
+                    db.Linguagem.Add(l);
+
+                    candidato.Linguagens?.Add(l);
                 }
-                for (int j = 0; j < 10; j++) {
-                    candidato.Skills?.Add(new Skills(db.Tecnologias.OrderBy(x => random.Next()).First(), candidato, new DateTime()));
+                for (int j = 0; j < random.Next(11); j++) {
+                    var t = new Skills(db.Tecnologias.OrderBy(x => random.Next()).First(), candidato, new DateTime());
+                    if (candidato.Skills.Exists(skills => skills.Tecnologias.Id == t.Tecnologias.Id))
+                        continue;
+                    db.Skills.Add(t);
+
+                    candidato.Skills?.Add(t);
                 }
 
                 db.Candidato.Add(candidato);

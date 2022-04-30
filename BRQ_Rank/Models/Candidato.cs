@@ -2,7 +2,7 @@
 
 namespace BRQ_Rank.Models {
     public class Candidato {
-        public int Id { get; private set; }
+        public int Id { get; set; }
         public string? Nm_Candidato { get; set; }
         public int Tp_Genero { get; set; }
         public DateTime Dt_Nasc { get; set; }
@@ -30,6 +30,40 @@ namespace BRQ_Rank.Models {
             Habilidades = habilidades;
             Linguagens = linguagens;
             Skills = skills;
+        }
+
+        string Map<T>(T[] objs, Func<T, string> func) {
+            string ret = "";
+            foreach (var obj in objs) {
+                ret += func(obj);
+            }
+            return ret;
+        }
+
+        public string ToHtml() {
+            var habs = Map(Habilidades.ToArray(), h => h.Competencias.Tp_Competencia + ", ");
+            var lings = Map(Linguagens.ToArray(), l => l.Idiomas.Tp_Idioma + ", ");
+            var skills = Map(Skills.ToArray(), s => s.Tecnologias.Tp_Tecnologias + ", ");
+
+            return $"<tr>" +
+                        $"<td>{Id}</td>" +
+                        $"<td>{Nm_Candidato}</td>" +
+                        $"<td>{Tp_Genero}</td>" +
+                        $"<td>{Dt_Nasc}</td>" +
+                        $"<td>{Email}</td>" +
+                        $"<td>{Nm_Telefone}</td>" +
+                        $"<td>{habs}</td>" +
+                        $"<td>{lings}</td>" +
+                        $"<td>{skills}</td>" +
+                    $"</tr>";
+        }
+
+        public string ToCsv() {
+            var habs = Map(Habilidades.ToArray(), h => h.Competencias.Tp_Competencia + "; ");
+            var lings = Map(Linguagens.ToArray(), l => l.Idiomas.Tp_Idioma + " = " + l.Tp_Nivel + "; ");
+            var skills = Map(Skills.ToArray(), s => s.Tecnologias.Tp_Tecnologias + "; ");
+
+            return $"{Id}, {Nm_Candidato}, {Tp_Genero}, {Dt_Nasc}, {Email}, {Nm_Telefone}, {habs}, {lings}, {skills}\n";
         }
     }
 }
