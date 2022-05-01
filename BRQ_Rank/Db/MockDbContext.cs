@@ -30,10 +30,10 @@ namespace BRQ_Rank.Db {
                 db.Competencias.Add(new Competencias($"Competencia{i}") { Id = i});
             }
             for (int i = 0; i < 23; i++) {
-                db.Idiomas.Add(new Idiomas($"Idioma{i}") { Id = i});
+                db.Idiomas.Add(new Idiomas($"Idioma{i}") { Id_idioma = i});
             }
             for (int i = 0; i < 60; i++) {
-                db.Tecnologias.Add(new Tecnologias($"Tecnologia{i}") { Id = i});
+                db.Tecnologias.Add(new Tecnologias($"Tecnologia{i}") { Id_Tecnologias = i});
             }
 
             for (int i = 0; i < 80000; i++) {
@@ -56,7 +56,7 @@ namespace BRQ_Rank.Db {
                     if (nivel == 0)
                         continue;
                     var l = new Linguagem(db.Idiomas.OrderBy(x => random.Next()).First(), candidato, nivel == 1 ? LinguagemNivel.Basico : (nivel == 2 ? LinguagemNivel.Medio : (nivel == 3 ? LinguagemNivel.Avancado : LinguagemNivel.Nenhum)));
-                    if (candidato.Linguagens.Exists(lingua => lingua.Idiomas.Id == l.Idiomas.Id))
+                    if (candidato.Linguagens.Exists(lingua => lingua.Idiomas.Id_idioma == l.Idiomas.Id_idioma))
                         continue;
                     db.Linguagem.Add(l);
 
@@ -64,7 +64,7 @@ namespace BRQ_Rank.Db {
                 }
                 for (int j = 0; j < random.Next(11); j++) {
                     var t = new Skills(db.Tecnologias.OrderBy(x => random.Next()).First(), candidato, new DateTime());
-                    if (candidato.Skills.Exists(skills => skills.Tecnologias.Id == t.Tecnologias.Id))
+                    if (candidato.Skills.Exists(skills => skills.Tecnologias.Id_Tecnologias == t.Tecnologias.Id_Tecnologias))
                         continue;
                     db.Skills.Add(t);
 

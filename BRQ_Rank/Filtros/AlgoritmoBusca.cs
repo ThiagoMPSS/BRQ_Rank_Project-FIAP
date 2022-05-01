@@ -8,23 +8,23 @@ namespace BRQ_Rank.Filtros {
                                              bool? LinguagemNivelDesc = null, int Limite = 0) {
             var query = from c in db.Candidato
                         join l in db.Linguagem on c.Id equals l.Candidato.Id
-                        join i in db.Idiomas on l.Idiomas.Id equals i.Id
+                        join i in db.Idiomas on l.Idiomas.Id_idioma equals i.Id_idioma
                         join s in db.Skills on c.Id equals s.Candidato.Id
-                        join t in db.Tecnologias on s.Tecnologias.Id equals t.Id
+                        join t in db.Tecnologias on s.Tecnologias.Id_Tecnologias equals t.Id_Tecnologias
                         join h in db.Habilidade on c.Id equals h.Candidato.Id
                         join cp in db.Competencias on h.Competencias.Id equals cp.Id
                         select new {
                             c.Id,
                             c.Nm_Candidato,
                             c.Nm_Telefone,
-                            c.Email,
+                            c.Nm_Email,
                             l.Tp_Nivel,
                             i.Tp_Idioma,
-                            s.Dt_certificado,
+                            s.Dt_Certificado,
                             t.Tp_Tecnologias,
                             h.Dt_certificacao,
                             cp.Tp_Competencia,
-                            Skills = c.Skills.Select(s => new { s.Tecnologias.Tp_Tecnologias, s.Dt_certificado }),
+                            Skills = c.Skills.Select(s => new { s.Tecnologias.Tp_Tecnologias, s.Dt_Certificado }),
                             Habilidades = c.Habilidades.Select(h => new { h.Competencias.Tp_Competencia, h.Dt_certificacao }),
                             Idiomas = c.Linguagens.Select(l => new { l.Idiomas.Tp_Idioma, l.Tp_Nivel })
                         };

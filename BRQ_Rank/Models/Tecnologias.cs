@@ -1,6 +1,12 @@
-﻿namespace BRQ_Rank.Models{
+﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
+
+namespace BRQ_Rank.Models{
+    [Table ("T_Tecnologias")]
     public class Tecnologias{
-        public int Id { get; set; }
+        [Key, Column("Id_Tecnologias")]
+        public int Id_Tecnologias { get; set; }
+        [Required, Column("Tp_Tecnologias")]
         public string? Tp_Tecnologias { get; set; }
 
         public Tecnologias() {

@@ -1,15 +1,27 @@
 ﻿using System.Collections.ObjectModel;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace BRQ_Rank.Models {
+    [Table ("T_Candidato")]
     public class Candidato {
+        [Key, Column("Id_Candidato")]
         public int Id { get; set; }
+        [Required, Column("Nm_Candidato")]
         public string? Nm_Candidato { get; set; }
+        [Required, Column("Tp_Genero")]
         public int Tp_Genero { get; set; }
+        [Required, Column("Dt_Nasc")]
         public DateTime Dt_Nasc { get; set; }
-        public string? Email { get; set; }
+        [Required, Column("Nm_Email")]
+        public string? Nm_Email { get; set; }
+        [Required, Column("Nm_Telefone")]
         public string? Nm_Telefone { get; set; }
+        [NotMapped]
         public List<Habilidade>? Habilidades { get; set; }
+        [NotMapped]
         public List<Linguagem>? Linguagens { get; set; }
+        [NotMapped]
         public List<Skills>? Skills { get; set; }
 
         public Candidato() {
@@ -20,7 +32,7 @@ namespace BRQ_Rank.Models {
             Nm_Candidato = nm_Candidato;
             Tp_Genero = tp_Genero;
             Dt_Nasc = dt_Nasc;
-            Email = email;
+            Nm_Email = email;
             Nm_Telefone = nm_Telefone;
         }
 
@@ -50,7 +62,7 @@ namespace BRQ_Rank.Models {
                         $"<td>{Nm_Candidato}</td>" +
                         $"<td>{Tp_Genero}</td>" +
                         $"<td>{Dt_Nasc}</td>" +
-                        $"<td>{Email}</td>" +
+                        $"<td>{Nm_Email}</td>" +
                         $"<td>{Nm_Telefone}</td>" +
                         $"<td>{habs}</td>" +
                         $"<td>{lings}</td>" +
@@ -63,7 +75,7 @@ namespace BRQ_Rank.Models {
             var lings = Map(Linguagens.ToArray(), l => l.Idiomas.Tp_Idioma + " = " + l.Tp_Nivel + "; ");
             var skills = Map(Skills.ToArray(), s => s.Tecnologias.Tp_Tecnologias + "; ");
 
-            return $"{Id}, {Nm_Candidato}, {Tp_Genero}, {Dt_Nasc}, {Email}, {Nm_Telefone}, {habs}, {lings}, {skills}\n";
+            return $"{Id}, {Nm_Candidato}, {Tp_Genero}, {Dt_Nasc}, {Nm_Email}, {Nm_Telefone}, {habs}, {lings}, {skills}\n";
         }
     }
 } 

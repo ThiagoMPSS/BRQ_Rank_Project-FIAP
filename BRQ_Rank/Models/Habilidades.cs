@@ -1,7 +1,14 @@
-﻿namespace BRQ_Rank.Models {
+﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
+
+namespace BRQ_Rank.Models {
+    [Table("T_Habilidade")]
     public class Habilidade {
+        [ForeignKey ("Id_Competencias")]
         public Competencias? Competencias { get; set; }
-        public Candidato? Candidato;
+        [ForeignKey("Id_Candidato")]
+        public Candidato? Candidato { get; set; }
+        [Required, Column("Dt_Certificacao")]
         public DateTime Dt_certificacao { get; set; }
 
         public Habilidade() {

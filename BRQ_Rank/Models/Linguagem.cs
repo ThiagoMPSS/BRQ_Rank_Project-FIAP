@@ -1,8 +1,14 @@
-﻿namespace BRQ_Rank.Models {
-    public class Linguagem{
+﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
+namespace BRQ_Rank.Models {
+    [Table("T_Linguagem")]
+    public class Linguagem{
+        [ForeignKey("Id_Idiomas")]
         public Idiomas? Idiomas { get; set; }
-        public Candidato? Candidato;
+        [ForeignKey("Id_Candidato")]
+        public Candidato? Candidato { get; set; }
+        [Required, Column("Tp_Nivel")]
         public LinguagemNivel Tp_Nivel { get; set; }
 
         public Linguagem() {
