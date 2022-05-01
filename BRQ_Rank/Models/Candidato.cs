@@ -66,4 +66,4 @@ namespace BRQ_Rank.Models {
             return $"{Id}, {Nm_Candidato}, {Tp_Genero}, {Dt_Nasc}, {Email}, {Nm_Telefone}, {habs}, {lings}, {skills}\n";
         }
     }
-}
+} 

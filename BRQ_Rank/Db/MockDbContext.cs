@@ -36,7 +36,7 @@ namespace BRQ_Rank.Db {
                 db.Tecnologias.Add(new Tecnologias($"Tecnologia{i}") { Id = i});
             }
 
-            for (int i = 0; i < 200; i++) {
+            for (int i = 0; i < 80000; i++) {
                 var day = random.Next(1, 29);
                 var month = random.Next(1, 13);
                 var year = random.Next(1930, 2005);
@@ -53,7 +53,9 @@ namespace BRQ_Rank.Db {
                 }
                 for (int j = 0; j < random.Next(11); j++) {
                     int nivel = new Random().Next(0, 4);
-                    var l = new Linguagem(db.Idiomas.OrderBy(x => random.Next()).First(), candidato, nivel == 1 ? "Básico" : (nivel == 2 ? "Médio" : (nivel == 3 ? "Avançado" : "Nenhum")));
+                    if (nivel == 0)
+                        continue;
+                    var l = new Linguagem(db.Idiomas.OrderBy(x => random.Next()).First(), candidato, nivel == 1 ? LinguagemNivel.Basico : (nivel == 2 ? LinguagemNivel.Medio : (nivel == 3 ? LinguagemNivel.Avancado : LinguagemNivel.Nenhum)));
                     if (candidato.Linguagens.Exists(lingua => lingua.Idiomas.Id == l.Idiomas.Id))
                         continue;
                     db.Linguagem.Add(l);

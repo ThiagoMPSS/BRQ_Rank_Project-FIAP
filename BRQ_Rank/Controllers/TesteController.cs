@@ -1,9 +1,10 @@
 ﻿using BRQ_Rank.Db;
+using BRQ_Rank.Filtros;
 using BRQ_Rank.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
-namespace BRQ_Rank.Controllers{
+namespace BRQ_Rank.Controllers {
     [Route("api/[controller]")]
     [ApiController]
     public class TesteController : ControllerBase {
@@ -43,16 +44,12 @@ namespace BRQ_Rank.Controllers{
 
         [HttpGet]
         public IActionResult Gerar() {
-            var QueryByLevelIdioma = (from c in db.Candidato
-                                      join l in db.Linguagem on c.Id equals l.Candidato.Id
-                                      join i in db.Idiomas on l.Idiomas.Id equals i.Id
-                                      orderby (l.Tp_Nivel == "Avançado" && i.Tp_Idioma == "Idioma4" ? 0 : (l.Tp_Nivel == "Médio" && i.Tp_Idioma == "Idioma4" ? 1 : l.Tp_Nivel == "Básico" && i.Tp_Idioma == "Idioma4" ? 2 : 3))
-                                      select c).DistinctBy(c => c.Id).Take(50);
+            var ret = db.GetQuery(Idioma: "Idioma4", Skill: "Tecnologia1", Competencia: "Competencia2", LinguagemNivelDesc: true, Limite: 200, SomenteSkill: true, SomenteCompetencia: true);
+            Console.WriteLine(ret);
 
-            return Ok(QueryByLevelIdioma);
+            return Ok(ret);
 
             //return Ok(db.Candidato.Where(e => e.Linguagens.Exists(e2 => e2.Tp_Nivel == "Básico" && e2.Idiomas.Tp_Idioma == "Idioma4") || e.Dt_Nasc.Year <= 1990).Take(10).ToArray());
         }
-
     }
 }
