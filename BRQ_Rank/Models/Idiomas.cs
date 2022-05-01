@@ -9,6 +9,7 @@ namespace BRQ_Rank.Models {
         public int Id_idioma { get; set; }
         [Required, Column("Tp_Idioma")]
         public string? Tp_Idioma { get; set; }
+        public Linguagem Linguagem { get; set;}
 
         public Idiomas() {
 
