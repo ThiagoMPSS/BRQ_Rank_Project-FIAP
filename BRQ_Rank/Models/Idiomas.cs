@@ -4,6 +4,7 @@ namespace BRQ_Rank.Models {
     public class Idiomas {
         public int Id { get; set; }
         public string? Tp_Idioma { get; set; }
+        public Linguagem Linguagem { get; set;}
 
         public Idiomas() {
 
