@@ -1,9 +1,10 @@
 ﻿using System.Collections.ObjectModel;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Text.Json.Serialization;
 
 namespace BRQ_Rank.Models {
-    [Table ("T_Candidato")]
+    [Table("T_Candidato")]
     public class Candidato {
         [Key, Column("Id_Candidato")]
         public int Id { get; set; }
@@ -17,12 +18,39 @@ namespace BRQ_Rank.Models {
         public string? Nm_Email { get; set; }
         [Required, Column("Nm_Telefone")]
         public string? Nm_Telefone { get; set; }
-        [NotMapped]
-        public List<Habilidade>? Habilidades { get; set; }
-        [NotMapped]
-        public List<Linguagem>? Linguagens { get; set; }
-        [NotMapped]
-        public List<Skills>? Skills { get; set; }
+        [NotMapped, JsonIgnore]
+        private List<Habilidade>? _Habilidade;
+        [NotMapped, JsonIgnore]
+        public List<Habilidade>? Habilidades {
+            get {
+                return _Habilidade;
+            } set {
+                value = value.Select(h => { h.Candidato = this; return h; }).ToList();
+                _Habilidade = value;
+            }
+        }
+        [NotMapped, JsonIgnore]
+        private List<Linguagem>? _Linguagens;
+        [NotMapped, JsonIgnore]
+        public List<Linguagem>? Linguagens { 
+            get {
+                return _Linguagens;
+            } set {
+                value = value.Select(v => { v.Candidato = this; return v; }).ToList();
+                _Linguagens = value;
+            }
+        }
+        [NotMapped, JsonIgnore]
+        private List<Skills>? _Skills;
+        [NotMapped, JsonIgnore]
+        public List<Skills>? Skills {
+            get {
+                return _Skills;
+            } set {
+                value = value.Select(s => { s.Candidato = this; return s; }).ToList();
+                _Skills = value;
+            }
+        }
 
         public Candidato() {
 
@@ -42,6 +70,10 @@ namespace BRQ_Rank.Models {
             Habilidades = habilidades;
             Linguagens = linguagens;
             Skills = skills;
+
+            habilidades.Select(h => h.Candidato = this);
+            linguagens.Select(l => l.Candidato = this);
+            skills.Select(s => s.Candidato = this);
         }
 
         string Map<T>(T[] objs, Func<T, string> func) {
@@ -78,4 +110,4 @@ namespace BRQ_Rank.Models {
             return $"{Id}, {Nm_Candidato}, {Tp_Genero}, {Dt_Nasc}, {Nm_Email}, {Nm_Telefone}, {habs}, {lings}, {skills}\n";
         }
     }
-} 
+}

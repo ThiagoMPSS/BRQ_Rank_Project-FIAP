@@ -9,8 +9,6 @@ namespace BRQ_Rank.Models {
         [Required, Column("Tp_Competencia")]
         public string? Tp_Competencia { get; set; }
 
-        public Habilidade Habilidade { get; set; }
-
         public Competencias() {
 
         }

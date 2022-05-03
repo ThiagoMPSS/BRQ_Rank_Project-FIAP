@@ -1,9 +1,12 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using Microsoft.EntityFrameworkCore;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace BRQ_Rank.Models {
     [Table("T_Skills")]
     public class Skills {
+        [Key, Column("Id_Skills")]
+        public int Id { get; set; }
         [ForeignKey("Id_Tecnologias")]
         public Tecnologias? Tecnologias { get; set; }
         [ForeignKey("Id_Candidato")]

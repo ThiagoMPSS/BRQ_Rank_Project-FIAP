@@ -12,14 +12,11 @@
 
   <ItemGroup>
     <PackageReference Include="Oracle.EntityFrameworkCore" Version="6.21.5" />
-    <PackageReference Include="Oracle.ManagedDataAccess" Version="21.5.0" />
     <PackageReference Include="Swashbuckle.AspNetCore" Version="6.2.3" />
   </ItemGroup>
 
   <ItemGroup>
-    <None Update="Db\TextTemplate.tt">
-      <Generator>TextTemplatingFileGenerator</Generator>
-    </None>
+    <Service Include="{508349b6-6b84-4df5-91f0-309beebad82d}" />
   </ItemGroup>
 
 </Project>

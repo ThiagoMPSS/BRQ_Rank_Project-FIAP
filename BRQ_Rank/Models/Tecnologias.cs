@@ -9,8 +9,6 @@ namespace BRQ_Rank.Models{
         [Required, Column("Tp_Tecnologias")]
         public string? Tp_Tecnologias { get; set; }
 
-        public Skills Skills  { get; set; }
-
         public Tecnologias() {
 
         }

@@ -2,10 +2,13 @@
 
 namespace BRQ_Rank.Filtros {
     public static class AlgoritmoBusca {
-        public static object GetQuery(this MockDbContext db, string? Idioma = "", string? Skill = "", string? Competencia = null,
+        public static object GetQuery(this DatabaseContext db, string Idioma = "", string Skill = "", string Competencia = "",
                                              bool SomenteSkill = false, bool SomenteCompetencia = false, bool SomenteIdioma = false,
-                                             string? Nome = "", string? CPF = "", string? Email = "", string? Telefone = "",
-                                             bool? LinguagemNivelDesc = null, int Limite = 0) {
+                                             string Nome = ""/*, string CPF = ""*/, string Email = "", string Telefone = "",
+                                             int Limite = 10) {
+            if (Limite > 100)
+                Limite = 100;
+
             var query = from c in db.Candidato
                         join l in db.Linguagem on c.Id equals l.Candidato.Id
                         join i in db.Idiomas on l.Idiomas.Id_idioma equals i.Id_idioma
@@ -13,6 +16,16 @@ namespace BRQ_Rank.Filtros {
                         join t in db.Tecnologias on s.Tecnologias.Id_Tecnologias equals t.Id_Tecnologias
                         join h in db.Habilidade on c.Id equals h.Candidato.Id
                         join cp in db.Competencias on h.Competencias.Id equals cp.Id
+                        orderby (Idioma != "" ? i.Tp_Idioma == Idioma : false) descending, (Idioma != "" ? l.Tp_Nivel : 0) descending,
+                        (Skill != "" ? t.Tp_Tecnologias == Skill : false) descending,
+                        (Competencia != "" ? cp.Tp_Competencia == Competencia : false) descending,
+                        c.Linguagens.Count() descending, c.Skills.Count() descending, c.Habilidades.Count() descending
+                        where (!string.IsNullOrEmpty(Nome) ? c.Nm_Candidato.ToLower().Contains(Nome.ToLower()) : true)
+                        && (!string.IsNullOrEmpty(Telefone) ? c.Nm_Telefone.Contains(Telefone) : true)
+                        && (!string.IsNullOrEmpty(Email) ? c.Nm_Email.ToLower() == Email.ToLower() : true)
+                        && (!string.IsNullOrEmpty(Idioma) && SomenteIdioma ? i.Tp_Idioma.ToLower() == Idioma.ToLower() : true)
+                        && (!string.IsNullOrEmpty(Skill) && SomenteSkill ? t.Tp_Tecnologias.ToLower() == Skill.ToLower() : true)
+                        && (!string.IsNullOrEmpty(Competencia) && SomenteCompetencia ? cp.Tp_Competencia.ToLower() == Competencia.ToLower() : true)
                         select new {
                             c.Id,
                             c.Nm_Candidato,
@@ -28,52 +41,17 @@ namespace BRQ_Rank.Filtros {
                             Habilidades = c.Habilidades.Select(h => new { h.Competencias.Tp_Competencia, h.Dt_certificacao }),
                             Idiomas = c.Linguagens.Select(l => new { l.Idiomas.Tp_Idioma, l.Tp_Nivel })
                         };
-            query = query.DistinctBy(c => c.Id);
 
-            if (!string.IsNullOrEmpty(Nome))
-                query = query.Where(c => c.Nm_Candidato == Nome);
-            //if (!string.IsNullOrEmpty(CPF))
-            //    query = query.Where(c => c.CPF == CPF);
-            if (!string.IsNullOrEmpty(Telefone))
-                query = query.Where(c => c.Nm_Telefone == Telefone);
-            if (!string.IsNullOrEmpty(Email))
-                query = query.Where(c => c.Email == Email);
-            if (!string.IsNullOrEmpty(Idioma) && SomenteIdioma)
-                query = query.Where(c => c.Tp_Idioma == Idioma);
-            if (!string.IsNullOrEmpty(Skill) && SomenteSkill)
-                query = query.Where(c => c.Tp_Tecnologias == Skill);
-            if (!string.IsNullOrEmpty(Competencia) && SomenteCompetencia)
-                query = query.Where(c => c.Tp_Competencia == Competencia);
-
-            if (Idioma != null) {
-                var idioma_int = (string i) => i == Idioma ? 1 : 0;
-                var orderedQuery = query.OrderByDescending(c => idioma_int(c.Tp_Idioma));
-
-                if (LinguagemNivelDesc != null) {
-                    if (LinguagemNivelDesc.Value)
-                        query = orderedQuery.ThenByDescending(c => (int)c.Tp_Nivel);
-                    else
-                        query = orderedQuery.ThenBy(c => c.Tp_Idioma);
-                }
-            } else {
-                if (LinguagemNivelDesc != null) {
-                    if (LinguagemNivelDesc.Value)
-                        query = query.OrderByDescending(c => c.Tp_Nivel);
-                    else
-                        query = query.OrderBy(c => c.Tp_Nivel);
-                }
-            }
-            int cont = query.Where(c => c.Tp_Idioma == Idioma).Count();
+            var ret = query.ToList().DistinctBy(c => c.Id);
             if (Limite > 0)
-                query = query.Take(Limite);
-
+                ret = ret.Take(Limite);
             return new object[] {
-                query.Count(),
-                query.Select(c => new {
+                ret.Count(),
+                ret.Select(c => new {
                     c.Id,
                     c.Nm_Candidato,
                     c.Nm_Telefone,
-                    c.Email,
+                    c.Nm_Email,
                     c.Skills,
                     c.Habilidades,
                     c.Idiomas

@@ -1,10 +1,13 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using Microsoft.EntityFrameworkCore;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace BRQ_Rank.Models {
     [Table("T_Habilidade")]
     public class Habilidade {
-        [ForeignKey ("Id_Competencias")]
+        [Key, Column("Id_Habilidade")]
+        public int Id { get; set; }
+        [ForeignKey("Id_Competencias")]
         public Competencias? Competencias { get; set; }
         [ForeignKey("Id_Candidato")]
         public Candidato? Candidato { get; set; }
